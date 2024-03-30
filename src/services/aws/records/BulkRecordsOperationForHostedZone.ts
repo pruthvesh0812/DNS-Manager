@@ -1,6 +1,7 @@
 import { Route53 } from 'aws-sdk';
 import { route53 } from '../awsConfig'
 import { paramsInterface } from '../lib/recordParamsInterface';
+import { Records } from '../../../db';
 
 type recordType = { param: Route53.ChangeResourceRecordSetsRequest }
 
@@ -47,6 +48,7 @@ export const bulkAddEditDeleteRecordToHostedZone = async (record: recordType) =>
     try {
         const data = await route53.changeResourceRecordSets(params2).promise();
         console.log("Record Added:", data);
+
         return data;
     } catch (error) {
         console.error("Error adding record:", error);

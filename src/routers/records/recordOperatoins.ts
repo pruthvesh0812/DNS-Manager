@@ -1,23 +1,28 @@
 import { createHostedZone } from '../../services/aws/hostedZones/createHostedZone'
 import express, { Request, Response } from 'express'
 import { authenticateLoggedIn } from '../../middlewares'
-import { Domains } from '../../db'
+import { Domains, Records } from '../../db'
 import { Route53 } from 'aws-sdk'
 import { listRecordsForDomain } from '../../services/aws/records/listRecords'
 import { paramsInterface } from '../../services/aws/lib/recordParamsInterface'
 import { addEditDeleteRecordToHostedZone } from '../../services/aws/records/RecordsOperationsForHostedZone'
 import { checkChangeStatus } from '../../services/aws/lib/getStatus'
 import bulkRecordRoutes from './bulkRecordOperation'
+import { createRecordForDb } from '../../services/aws/lib/createRecordForDb'
 const router = express.Router()
 
+// declare type for record parameters
 type recordType = { param: Route53.ChangeResourceRecordSetsRequest }
 
-router.use("/bulk",bulkRecordRoutes)
+// incorporate the type routing policy 
+type recordAndRoutingPolicy = { record: recordType; routingPolicy: string }
+
+router.use("/bulk", bulkRecordRoutes)
 
 router.get("/", async (req: Request, res: Response) => {
     const domainName = req.query.domain as string;
     const { email, password, _id } = JSON.parse(req.cookies.user); // user object is in json but in string format so need to parse that
-    console.log(domainName,_id )
+    console.log(domainName, _id)
 
     try {
         const domain = await Domains.findOne({ domainName, userId: _id })
@@ -39,28 +44,46 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.post("/create", async (req: Request, res: Response) => {
 
-    const record:recordType = req.body;
-    console.log(record,'record param and hostedZid')
-    
+    const { record, routingPolicy }: recordAndRoutingPolicy = req.body;
+    console.log(record, 'record param and hostedZid')
+    const {_id} = JSON.parse(req.cookies.user);
     try {
-        const response = await addEditDeleteRecordToHostedZone(record)
-        if (response) {
-            console.log(response, 'response from create record')
+        // to get domainId
+        const domain = await Domains.findOne({userId:_id})
+        //check domain exists
+        if(domain){
 
-            if (response.ChangeInfo.Status === "PENDING") {
-                let status = await checkChangeStatus(response.ChangeInfo.Id);
-                if (status) {
-                    while (status === "PENDING") {                       
-                        status = await checkChangeStatus(response.ChangeInfo.Id);   
+            // add record to hostedZone on aws
+            const response = await addEditDeleteRecordToHostedZone(record)
+
+            //check if response
+            if (response) {
+                    console.log(response, 'response from create record')
+
+                    // save record to db
+                    
+                    const recordSaved = new Records(createRecordForDb(record, domain._id ,routingPolicy))
+                    await recordSaved.save()
+                    
+                    // check status to return res on INSYNC
+                    if (response.ChangeInfo.Status === "PENDING") {
+                        let status = await checkChangeStatus(response.ChangeInfo.Id);
+                        if (status) {
+                            while (status === "PENDING") {
+                                status = await checkChangeStatus(response.ChangeInfo.Id);
+                            }
+                            return res.status(200).json({ message: "record created successfully", status })
+                        }
+
                     }
-                    return res.status(200).json({ message: "record created successfully", status })
+                    else {
+                        return res.status(200).json({ message: "record created successfully", status })
+                    }
                 }
-
-            }
-            else {
-                return res.status(200).json({ message: "record created successfully", status })
-            }
+        }else{
+            return res.status(404).json({ error: "domain does not exists" })
         }
+        
     }
     catch (err) {
         return res.status(500).json({ error: "Internal server error" })
@@ -86,8 +109,9 @@ router.delete("/delete", async (req: Request, res: Response) => {
                     let status = await checkChangeStatus(response.ChangeInfo.Id);
                     if (status) {
                         while (status === "PENDING") {
-                            status = await checkChangeStatus(response.ChangeInfo.Id);                       
+                            status = await checkChangeStatus(response.ChangeInfo.Id);
                         }
+                        const result = await Records.deleteOne({recordName:record.param.ChangeBatch.Changes[0].ResourceRecordSet.Name})
                         return res.status(200).json({ message: "record deleted successfully", status })
                     }
 
@@ -117,7 +141,7 @@ router.put("/update", async (req: Request, res: Response) => {
                 let status = await checkChangeStatus(response.ChangeInfo.Id);
                 if (status) {
                     while (status === "PENDING") {
-                         status = await checkChangeStatus(response.ChangeInfo.Id);
+                        status = await checkChangeStatus(response.ChangeInfo.Id);
                     }
                     return res.status(200).json({ message: "record updated successfully", status })
                 }

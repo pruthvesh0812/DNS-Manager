@@ -18,6 +18,7 @@ const listRecords_1 = require("../../services/aws/records/listRecords");
 const RecordsOperationsForHostedZone_1 = require("../../services/aws/records/RecordsOperationsForHostedZone");
 const getStatus_1 = require("../../services/aws/lib/getStatus");
 const bulkRecordOperation_1 = __importDefault(require("./bulkRecordOperation"));
+const createRecordForDb_1 = require("../../services/aws/lib/createRecordForDb");
 const router = express_1.default.Router();
 router.use("/bulk", bulkRecordOperation_1.default);
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -42,24 +43,39 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const record = req.body;
+    const { record, routingPolicy } = req.body;
     console.log(record, 'record param and hostedZid');
+    const { _id } = JSON.parse(req.cookies.user);
     try {
-        const response = yield (0, RecordsOperationsForHostedZone_1.addEditDeleteRecordToHostedZone)(record);
-        if (response) {
-            console.log(response, 'response from create record');
-            if (response.ChangeInfo.Status === "PENDING") {
-                let status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
-                if (status) {
-                    while (status === "PENDING") {
-                        status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
+        // to get domainId
+        const domain = yield db_1.Domains.findOne({ userId: _id });
+        //check domain exists
+        if (domain) {
+            // add record to hostedZone on aws
+            const response = yield (0, RecordsOperationsForHostedZone_1.addEditDeleteRecordToHostedZone)(record);
+            //check if response
+            if (response) {
+                console.log(response, 'response from create record');
+                // save record to db
+                const recordSaved = new db_1.Records((0, createRecordForDb_1.createRecordForDb)(record, domain._id, routingPolicy));
+                yield recordSaved.save();
+                // check status to return res on INSYNC
+                if (response.ChangeInfo.Status === "PENDING") {
+                    let status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
+                    if (status) {
+                        while (status === "PENDING") {
+                            status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
+                        }
+                        return res.status(200).json({ message: "record created successfully", status });
                     }
+                }
+                else {
                     return res.status(200).json({ message: "record created successfully", status });
                 }
             }
-            else {
-                return res.status(200).json({ message: "record created successfully", status });
-            }
+        }
+        else {
+            return res.status(404).json({ error: "domain does not exists" });
         }
     }
     catch (err) {

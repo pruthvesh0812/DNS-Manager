@@ -6,6 +6,7 @@ import { deleteHostedZone } from '../services/aws/hostedZones/deleteHostedZone'
 import { listHostedZones } from '../services/aws/hostedZones/listHostedZones'
 import { ListHostedZonesType } from '../services/aws/lib/typesForHostedZone'
 import { Route53 } from 'aws-sdk'
+import { checkChangeStatus } from '../services/aws/lib/getStatus'
 const router = express.Router()
 
 router.post("/create", async (req: Request, res: Response) => {
@@ -59,8 +60,13 @@ router.delete("/delete", async (req: Request, res: Response) => {
         //check if userId maps to hostedZoneId
         const domain = await Domains.findOne({ userId: _id, hostedZoneId })
         if (domain) {
-            const response = await deleteHostedZone(hostedZoneId);
+            const response = await deleteHostedZone(hostedZoneId,domain._id);
             if (response) {
+                let status:string = response.ChangeInfo.Status;
+                while(status === "PENDING"){
+                    status = await checkChangeStatus(response.ChangeInfo.Id) as string
+                }
+                const result = await Domains.deleteOne({hostedZoneId})
                 res.status(200).json({ message: "hosted zone deleted", response })
             }
         }

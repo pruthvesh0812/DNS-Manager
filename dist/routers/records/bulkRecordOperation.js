@@ -16,25 +16,35 @@ const express_1 = __importDefault(require("express"));
 const db_1 = require("../../db");
 const getStatus_1 = require("../../services/aws/lib/getStatus");
 const BulkRecordsOperationForHostedZone_1 = require("../../services/aws/records/BulkRecordsOperationForHostedZone");
+const createRecordForDb_1 = require("../../services/aws/lib/createRecordForDb");
 const router = express_1.default.Router();
 router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const record = req.body;
+    const { record, routingPolicy } = req.body;
+    const { _id } = JSON.parse(req.cookies.user);
+    console.log(record, routingPolicy, "RR");
     try {
-        const response = yield (0, BulkRecordsOperationForHostedZone_1.bulkAddEditDeleteRecordToHostedZone)(record);
-        if (response) {
-            console.log(response, 'response from create record');
-            if (response.ChangeInfo.Status === "PENDING") {
-                let status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
-                if (status) {
-                    while (status === "PENDING") {
-                        status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
+        const domain = yield db_1.Domains.findOne({ userId: _id });
+        if (domain) {
+            const response = yield (0, BulkRecordsOperationForHostedZone_1.bulkAddEditDeleteRecordToHostedZone)(record);
+            if (response) {
+                console.log(response, 'response from create record');
+                const records = yield db_1.Records.insertMany((0, createRecordForDb_1.createRecordForDb)(record, domain._id, routingPolicy));
+                if (response.ChangeInfo.Status === "PENDING") {
+                    let status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
+                    if (status) {
+                        while (status === "PENDING") {
+                            status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
+                        }
+                        return res.status(200).json({ message: "record created successfully", status });
                     }
+                }
+                else {
                     return res.status(200).json({ message: "record created successfully", status });
                 }
             }
-            else {
-                return res.status(200).json({ message: "record created successfully", status });
-            }
+        }
+        else {
+            return res.status(404).json({ error: "domain not found" });
         }
     }
     catch (err) {

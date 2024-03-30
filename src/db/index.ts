@@ -16,9 +16,9 @@ const domainSchema = new mongoose.Schema({
 
 // record schema
 const recordSchema = new mongoose.Schema({
+    recordAction:String,
     recordType: String,
-    recordDescription: String,
-    recordValue:String,
+    recordName: String,
     recordRoutingPolicy:String,
     ttl: Number,
     domainId: { type: mongoose.Schema.Types.ObjectId, ref: 'Domains' }

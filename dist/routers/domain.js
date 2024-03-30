@@ -61,7 +61,7 @@ router.delete("/delete", (req, res) => __awaiter(void 0, void 0, void 0, functio
         //check if userId maps to hostedZoneId
         const domain = yield db_1.Domains.findOne({ userId: _id, hostedZoneId });
         if (domain) {
-            const response = yield (0, deleteHostedZone_1.deleteHostedZone)(hostedZoneId);
+            const response = yield (0, deleteHostedZone_1.deleteHostedZone)(hostedZoneId, domain._id);
             if (response) {
                 res.status(200).json({ message: "hosted zone deleted", response });
             }
