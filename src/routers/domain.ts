@@ -51,10 +51,10 @@ router.post("/create", async (req: Request, res: Response) => {
 
 })
 
-router.delete("/delete:HostedZoneId", async (req: Request, res: Response) => {
-    const { email, password, _id } = req.cookies.user
-    const hostedZoneId = req.params.HostedZoneId;
-
+router.delete("/delete", async (req: Request, res: Response) => {
+    const { email, password, _id } = JSON.parse(req.cookies.user)
+    const hostedZoneId = req.query.hostedZoneId as string;
+    
     try {
         //check if userId maps to hostedZoneId
         const domain = await Domains.findOne({ userId: _id, hostedZoneId })

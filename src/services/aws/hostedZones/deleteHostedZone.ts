@@ -1,6 +1,12 @@
+import { Route53 } from 'aws-sdk';
 import { route53 } from '../awsConfig'
+import { addEditDeleteRecordToHostedZone } from '../records/RecordsOperationsForHostedZone';
+
+type recordType = { param: Route53.ChangeResourceRecordSetsRequest }
+
 
 export const deleteHostedZone = async (hostedZoneId:string) => {
+   // addEditDeleteRecordToHostedZone()
     const params = {
        Id: hostedZoneId,
     };

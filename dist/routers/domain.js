@@ -54,9 +54,9 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
         console.log("Error while checking domain", fetchError);
     }
 }));
-router.delete("/delete:HostedZoneId", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password, _id } = req.cookies.user;
-    const hostedZoneId = req.params.HostedZoneId;
+router.delete("/delete", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password, _id } = JSON.parse(req.cookies.user);
+    const hostedZoneId = req.query.hostedZoneId;
     try {
         //check if userId maps to hostedZoneId
         const domain = yield db_1.Domains.findOne({ userId: _id, hostedZoneId });

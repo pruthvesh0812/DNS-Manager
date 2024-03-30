@@ -2,11 +2,11 @@ import { Route53 } from 'aws-sdk';
 import { route53 } from '../awsConfig'
 import { paramsInterface } from '../lib/recordParamsInterface';
 
-type paramsType = paramsInterface
+type recordType = { param: Route53.ChangeResourceRecordSetsRequest }
 
-
-export const addEditDeleteRecordToHostedZone = async (param: Route53.ChangeResourceRecordSetsRequest) => {
-    console.log(param.HostedZoneId,"hzid")
+export const addEditDeleteRecordToHostedZone = async (record: recordType) => {
+    console.log(record.param.HostedZoneId,"hzid")
+    
     // const params = {
     //     ChangeBatch: {
     //         Changes: [
@@ -38,10 +38,10 @@ export const addEditDeleteRecordToHostedZone = async (param: Route53.ChangeResou
     // };
 
     const params2 = {
-        HostedZoneId:param.HostedZoneId,
+        HostedZoneId:record.param.HostedZoneId,
         ChangeBatch:{
-            Changes:param.ChangeBatch.Changes,
-            Comment:param.ChangeBatch.Comment
+            Changes:record.param.ChangeBatch.Changes,
+            Comment:record.param.ChangeBatch.Comment
     }}
     type a = Route53.ChangeResourceRecordSetsRequest
     try {

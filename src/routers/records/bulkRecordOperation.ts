@@ -9,14 +9,14 @@ import { bulkAddEditDeleteRecordToHostedZone } from '../../services/aws/records/
 
 const router = express.Router()
 
-type recordType = { param: paramsInterface[], hostedZoneId: string }
+type recordType = { param: Route53.ChangeResourceRecordSetsRequest}
 
 router.post("/create", async (req: Request, res: Response) => {
 
     const record: recordType = req.body;
 
     try {
-        const response = await bulkAddEditDeleteRecordToHostedZone(record.param, record.hostedZoneId)
+        const response = await bulkAddEditDeleteRecordToHostedZone(record)
         if (response) {
             console.log(response, 'response from create record')
 
@@ -24,9 +24,7 @@ router.post("/create", async (req: Request, res: Response) => {
                 let status = await checkChangeStatus(response.ChangeInfo.Id);
                 if (status) {
                     while (status === "PENDING") {
-                        setTimeout(async () => {
                             status = await checkChangeStatus(response.ChangeInfo.Id);
-                        }, 2000)
                     }
                     return res.status(200).json({ message: "record created successfully", status })
                 }
@@ -47,13 +45,13 @@ router.post("/delete", async (req: Request, res: Response) => {
 
     const record: recordType = req.body;
 
-    const { _id } = req.cookies['user']
-    const hostedZoneId = record.hostedZoneId;
+    const { _id } = JSON.parse(req.cookies.user)
+    const hostedZoneId = record.param.HostedZoneId;
     try {
         const domain = await Domains.findOne({ userId: _id, hostedZoneId })
         // to check whether a user has not taken other users hostedZoneId and trying to delete it
         if (domain) {
-            const response = await bulkAddEditDeleteRecordToHostedZone(record.param, record.hostedZoneId)
+            const response = await bulkAddEditDeleteRecordToHostedZone(record)
             if (response) {
                 console.log(response, 'response from delete record')
 
@@ -86,7 +84,7 @@ router.post("/update", async (req: Request, res: Response) => {
     const record: recordType = req.body;
 
     try {
-        const response = await bulkAddEditDeleteRecordToHostedZone(record.param, record.hostedZoneId)
+        const response = await bulkAddEditDeleteRecordToHostedZone(record)
         if (response) {
             console.log(response, 'response from update record')
 

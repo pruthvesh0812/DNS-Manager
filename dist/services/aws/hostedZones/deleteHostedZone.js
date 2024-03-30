@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteHostedZone = void 0;
 const awsConfig_1 = require("../awsConfig");
 const deleteHostedZone = (hostedZoneId) => __awaiter(void 0, void 0, void 0, function* () {
+    // addEditDeleteRecordToHostedZone()
     const params = {
         Id: hostedZoneId,
     };

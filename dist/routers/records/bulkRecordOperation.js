@@ -20,16 +20,14 @@ const router = express_1.default.Router();
 router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const record = req.body;
     try {
-        const response = yield (0, BulkRecordsOperationForHostedZone_1.bulkAddEditDeleteRecordToHostedZone)(record.param, record.hostedZoneId);
+        const response = yield (0, BulkRecordsOperationForHostedZone_1.bulkAddEditDeleteRecordToHostedZone)(record);
         if (response) {
             console.log(response, 'response from create record');
             if (response.ChangeInfo.Status === "PENDING") {
                 let status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
                 if (status) {
                     while (status === "PENDING") {
-                        setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
-                            status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
-                        }), 2000);
+                        status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
                     }
                     return res.status(200).json({ message: "record created successfully", status });
                 }
@@ -45,13 +43,13 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
 }));
 router.post("/delete", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const record = req.body;
-    const { _id } = req.cookies['user'];
-    const hostedZoneId = record.hostedZoneId;
+    const { _id } = JSON.parse(req.cookies.user);
+    const hostedZoneId = record.param.HostedZoneId;
     try {
         const domain = yield db_1.Domains.findOne({ userId: _id, hostedZoneId });
         // to check whether a user has not taken other users hostedZoneId and trying to delete it
         if (domain) {
-            const response = yield (0, BulkRecordsOperationForHostedZone_1.bulkAddEditDeleteRecordToHostedZone)(record.param, record.hostedZoneId);
+            const response = yield (0, BulkRecordsOperationForHostedZone_1.bulkAddEditDeleteRecordToHostedZone)(record);
             if (response) {
                 console.log(response, 'response from delete record');
                 if (response.ChangeInfo.Status === "PENDING") {
@@ -78,7 +76,7 @@ router.post("/delete", (req, res) => __awaiter(void 0, void 0, void 0, function*
 router.post("/update", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const record = req.body;
     try {
-        const response = yield (0, BulkRecordsOperationForHostedZone_1.bulkAddEditDeleteRecordToHostedZone)(record.param, record.hostedZoneId);
+        const response = yield (0, BulkRecordsOperationForHostedZone_1.bulkAddEditDeleteRecordToHostedZone)(record);
         if (response) {
             console.log(response, 'response from update record');
             if (response.ChangeInfo.Status === "PENDING") {

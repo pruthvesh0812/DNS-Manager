@@ -52,9 +52,7 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
                 let status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
                 if (status) {
                     while (status === "PENDING") {
-                        setTimeout(() => __awaiter(void 0, void 0, void 0, function* () {
-                            status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
-                        }), 2000);
+                        status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
                     }
                     return res.status(200).json({ message: "record created successfully", status });
                 }
@@ -68,64 +66,58 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.status(500).json({ error: "Internal server error" });
     }
 }));
-// router.delete("/delete", async (req: Request, res: Response) => {
-//     const record: recordType = req.body;
-//     record.param.Action = "DELETE"
-//     const { _id } = req.cookies['user']
-//     const hostedZoneId = record.hostedZoneId;
-//     try {
-//         const domain = await Domains.findOne({ userId: _id, hostedZoneId })
-//         // to check whether a user has not taken other users hostedZoneId and trying to delete it
-//         if (domain) {
-//             const response = await addEditDeleteRecordToHostedZone(record.param, record.hostedZoneId)
-//             if (response) {
-//                 console.log(response, 'response from delete record')
-//                 if (response.ChangeInfo.Status === "PENDING") {
-//                     let status = await checkChangeStatus(response.ChangeInfo.Id);
-//                     if (status) {
-//                         while (status === "PENDING") {
-//                             setTimeout(async () => {
-//                                 status = await checkChangeStatus(response.ChangeInfo.Id);
-//                             }, 2000)
-//                         }
-//                         return res.status(200).json({ message: "record deleted successfully", status })
-//                     }
-//                 }
-//                 else {
-//                     return res.status(200).json({ message: "record deleted successfully", status })
-//                 }
-//             }
-//         }
-//     }
-//     catch (err) {
-//         return res.status(500).json({ error: "Internal server error" })
-//     }
-// })
-// router.put("/update", async (req: Request, res: Response) => {
-//     const record: recordType = req.body;
-//     record.param.Action = "UPSERT"
-//     try {
-//         const response = await addEditDeleteRecordToHostedZone(record.param, record.hostedZoneId)
-//         if (response) {
-//             console.log(response, 'response from update record')
-//             if (response.ChangeInfo.Status === "PENDING") {
-//                 let status = await checkChangeStatus(response.ChangeInfo.Id);
-//                 if (status) {
-//                     while (status === "PENDING") {
-//                         setTimeout(async () => {
-//                             status = await checkChangeStatus(response.ChangeInfo.Id);
-//                         }, 2000)
-//                     }
-//                     return res.status(200).json({ message: "record updated successfully", status })
-//                 }
-//             }
-//             else {
-//                 return res.status(200).json({ message: "record updated successfully", status })
-//             }
-//         }
-//     }
-//     catch (err) {
-//         return res.status(500).json({ error: "Internal server error" })
-//     }
-// })
+router.delete("/delete", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const record = req.body;
+    const { _id } = JSON.parse(req.cookies.user);
+    const hostedZoneId = record.param.HostedZoneId;
+    try {
+        const domain = yield db_1.Domains.findOne({ userId: _id, hostedZoneId });
+        // to check whether a user has not taken other users hostedZoneId and trying to delete it
+        if (domain) {
+            const response = yield (0, RecordsOperationsForHostedZone_1.addEditDeleteRecordToHostedZone)(record);
+            if (response) {
+                console.log(response, 'response from delete record');
+                if (response.ChangeInfo.Status === "PENDING") {
+                    let status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
+                    if (status) {
+                        while (status === "PENDING") {
+                            status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
+                        }
+                        return res.status(200).json({ message: "record deleted successfully", status });
+                    }
+                }
+                else {
+                    return res.status(200).json({ message: "record deleted successfully", status });
+                }
+            }
+        }
+    }
+    catch (err) {
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}));
+router.put("/update", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const record = req.body;
+    try {
+        const response = yield (0, RecordsOperationsForHostedZone_1.addEditDeleteRecordToHostedZone)(record);
+        if (response) {
+            console.log(response, 'response from update record');
+            if (response.ChangeInfo.Status === "PENDING") {
+                let status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
+                if (status) {
+                    while (status === "PENDING") {
+                        status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
+                    }
+                    return res.status(200).json({ message: "record updated successfully", status });
+                }
+            }
+            else {
+                return res.status(200).json({ message: "record updated successfully", status });
+            }
+        }
+    }
+    catch (err) {
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}));
 exports.default = router;

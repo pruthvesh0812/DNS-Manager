@@ -11,9 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addEditDeleteRecordToHostedZone = void 0;
 const awsConfig_1 = require("../awsConfig");
-const addEditDeleteRecordToHostedZone = (param) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(param.param.HostedZoneId,"hzid")
-    console.log(param,"params")
+const addEditDeleteRecordToHostedZone = (record) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(record.param.HostedZoneId, "hzid");
     // const params = {
     //     ChangeBatch: {
     //         Changes: [
@@ -44,10 +43,10 @@ const addEditDeleteRecordToHostedZone = (param) => __awaiter(void 0, void 0, voi
     //     HostedZoneId:"/hostedzone/Z0282893QXDEPYST0539"
     // };
     const params2 = {
-        HostedZoneId: param.param.HostedZoneId,
+        HostedZoneId: record.param.HostedZoneId,
         ChangeBatch: {
-            Changes: param.param.ChangeBatch.Changes,
-            Comment: param.param.ChangeBatch.Comment
+            Changes: record.param.ChangeBatch.Changes,
+            Comment: record.param.ChangeBatch.Comment
         }
     };
     try {
