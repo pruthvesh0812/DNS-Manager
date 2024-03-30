@@ -99,6 +99,7 @@ router.delete("/delete", (req, res) => __awaiter(void 0, void 0, void 0, functio
                         while (status === "PENDING") {
                             status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
                         }
+                        const result = yield db_1.Records.deleteOne({ recordName: record.param.ChangeBatch.Changes[0].ResourceRecordSet.Name });
                         return res.status(200).json({ message: "record deleted successfully", status });
                     }
                 }

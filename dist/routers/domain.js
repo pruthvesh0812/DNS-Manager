@@ -17,6 +17,7 @@ const express_1 = __importDefault(require("express"));
 const db_1 = require("../db");
 const deleteHostedZone_1 = require("../services/aws/hostedZones/deleteHostedZone");
 const listHostedZones_1 = require("../services/aws/hostedZones/listHostedZones");
+const getStatus_1 = require("../services/aws/lib/getStatus");
 const router = express_1.default.Router();
 router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { domain } = req.body;
@@ -63,6 +64,11 @@ router.delete("/delete", (req, res) => __awaiter(void 0, void 0, void 0, functio
         if (domain) {
             const response = yield (0, deleteHostedZone_1.deleteHostedZone)(hostedZoneId, domain._id);
             if (response) {
+                let status = response.ChangeInfo.Status;
+                while (status === "PENDING") {
+                    status = (yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id));
+                }
+                const result = yield db_1.Domains.deleteOne({ hostedZoneId });
                 res.status(200).json({ message: "hosted zone deleted", response });
             }
         }
