@@ -16,7 +16,8 @@ router.use("/bulk",bulkRecordRoutes)
 
 router.get("/", async (req: Request, res: Response) => {
     const domainName = req.query.domain as string;
-    const { email, password, _id } = req.cookies.user;
+    const { email, password, _id } = JSON.parse(req.cookies.user); // user object is in json but in string format so need to parse that
+    console.log(domainName,_id )
 
     try {
         const domain = await Domains.findOne({ domainName, userId: _id })
@@ -38,10 +39,11 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.post("/create", async (req: Request, res: Response) => {
 
-    const record: recordType = req.body;
-    record.param.Action = "CREATE"
+    const record:Route53.ChangeResourceRecordSetsRequest = req.body;
+    console.log(record,'record param and hostedZid')
+
     try {
-        const response = await addEditDeleteRecordToHostedZone(record.param, record.hostedZoneId)
+        const response = await addEditDeleteRecordToHostedZone(record)
         if (response) {
             console.log(response, 'response from create record')
 
@@ -49,9 +51,9 @@ router.post("/create", async (req: Request, res: Response) => {
                 let status = await checkChangeStatus(response.ChangeInfo.Id);
                 if (status) {
                     while (status === "PENDING") {
-                        setTimeout(async () => {
-                            status = await checkChangeStatus(response.ChangeInfo.Id);
-                        }, 2000)
+                        
+                        status = await checkChangeStatus(response.ChangeInfo.Id);
+                        
                     }
                     return res.status(200).json({ message: "record created successfully", status })
                 }
@@ -68,75 +70,75 @@ router.post("/create", async (req: Request, res: Response) => {
 
 })
 
-router.delete("/delete", async (req: Request, res: Response) => {
+// router.delete("/delete", async (req: Request, res: Response) => {
 
-    const record: recordType = req.body;
-    record.param.Action = "DELETE"
-    const { _id } = req.cookies['user']
-    const hostedZoneId = record.hostedZoneId;
-    try {
-        const domain = await Domains.findOne({ userId: _id, hostedZoneId })
-        // to check whether a user has not taken other users hostedZoneId and trying to delete it
-        if (domain) {
-            const response = await addEditDeleteRecordToHostedZone(record.param, record.hostedZoneId)
-            if (response) {
-                console.log(response, 'response from delete record')
+//     const record: recordType = req.body;
+//     record.param.Action = "DELETE"
+//     const { _id } = req.cookies['user']
+//     const hostedZoneId = record.hostedZoneId;
+//     try {
+//         const domain = await Domains.findOne({ userId: _id, hostedZoneId })
+//         // to check whether a user has not taken other users hostedZoneId and trying to delete it
+//         if (domain) {
+//             const response = await addEditDeleteRecordToHostedZone(record.param, record.hostedZoneId)
+//             if (response) {
+//                 console.log(response, 'response from delete record')
 
-                if (response.ChangeInfo.Status === "PENDING") {
-                    let status = await checkChangeStatus(response.ChangeInfo.Id);
-                    if (status) {
-                        while (status === "PENDING") {
-                            setTimeout(async () => {
-                                status = await checkChangeStatus(response.ChangeInfo.Id);
-                            }, 2000)
-                        }
-                        return res.status(200).json({ message: "record deleted successfully", status })
-                    }
+//                 if (response.ChangeInfo.Status === "PENDING") {
+//                     let status = await checkChangeStatus(response.ChangeInfo.Id);
+//                     if (status) {
+//                         while (status === "PENDING") {
+//                             setTimeout(async () => {
+//                                 status = await checkChangeStatus(response.ChangeInfo.Id);
+//                             }, 2000)
+//                         }
+//                         return res.status(200).json({ message: "record deleted successfully", status })
+//                     }
 
-                }
-                else {
-                    return res.status(200).json({ message: "record deleted successfully", status })
-                }
-            }
-        }
-    }
-    catch (err) {
-        return res.status(500).json({ error: "Internal server error" })
-    }
+//                 }
+//                 else {
+//                     return res.status(200).json({ message: "record deleted successfully", status })
+//                 }
+//             }
+//         }
+//     }
+//     catch (err) {
+//         return res.status(500).json({ error: "Internal server error" })
+//     }
 
-})
+// })
 
-router.put("/update", async (req: Request, res: Response) => {
+// router.put("/update", async (req: Request, res: Response) => {
 
-    const record: recordType = req.body;
-    record.param.Action = "UPSERT"
-    try {
-        const response = await addEditDeleteRecordToHostedZone(record.param, record.hostedZoneId)
-        if (response) {
-            console.log(response, 'response from update record')
+//     const record: recordType = req.body;
+//     record.param.Action = "UPSERT"
+//     try {
+//         const response = await addEditDeleteRecordToHostedZone(record.param, record.hostedZoneId)
+//         if (response) {
+//             console.log(response, 'response from update record')
 
-            if (response.ChangeInfo.Status === "PENDING") {
-                let status = await checkChangeStatus(response.ChangeInfo.Id);
-                if (status) {
-                    while (status === "PENDING") {
-                        setTimeout(async () => {
-                            status = await checkChangeStatus(response.ChangeInfo.Id);
-                        }, 2000)
-                    }
-                    return res.status(200).json({ message: "record updated successfully", status })
-                }
+//             if (response.ChangeInfo.Status === "PENDING") {
+//                 let status = await checkChangeStatus(response.ChangeInfo.Id);
+//                 if (status) {
+//                     while (status === "PENDING") {
+//                         setTimeout(async () => {
+//                             status = await checkChangeStatus(response.ChangeInfo.Id);
+//                         }, 2000)
+//                     }
+//                     return res.status(200).json({ message: "record updated successfully", status })
+//                 }
 
-            }
-            else {
-                return res.status(200).json({ message: "record updated successfully", status })
-            }
-        }
-    }
-    catch (err) {
-        return res.status(500).json({ error: "Internal server error" })
-    }
+//             }
+//             else {
+//                 return res.status(200).json({ message: "record updated successfully", status })
+//             }
+//         }
+//     }
+//     catch (err) {
+//         return res.status(500).json({ error: "Internal server error" })
+//     }
 
-})
+// })
 
 export default router;
 

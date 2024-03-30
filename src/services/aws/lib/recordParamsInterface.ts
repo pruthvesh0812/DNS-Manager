@@ -7,7 +7,7 @@ export interface paramsInterface{
             DNSName:string,
             EvaluateTargetHealth:boolean,
             HostedZoneId:string
-        }
+        },
         CidrRoutingConfig?: {
             CollectionId: string, 
             LocationName: string 
@@ -39,7 +39,7 @@ export interface paramsInterface{
           TTL?: number,
           TrafficPolicyInstanceId?: string,
           Weight?: number,
-          Comment?: string
-    }
+    },
+    Comment?: string
 }
   

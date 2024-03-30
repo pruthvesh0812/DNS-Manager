@@ -78,14 +78,14 @@ router.get("/hostedZones", (req, res) => __awaiter(void 0, void 0, void 0, funct
     const { email, password, _id } = JSON.parse(req.cookies.user);
     console.log(_id, "id of domain");
     try {
-        const domains = yield db_1.Domains.find({userId:_id});
+        const domains = yield db_1.Domains.find({ userId: _id });
         console.log(domains, "domains");
         if (domains) {
             const response = yield (0, listHostedZones_1.listHostedZones)(); // returns promise of HostedZone array
             // check if promise is undefined
             if (response) {
                 console.log(response, "response");
-                const userHostedZones = response.filter((ele) => domains.some(domain => domain.hostedZoneId === ele.Id))
+                const userHostedZones = response.filter((ele) => domains.some(domain => domain.hostedZoneId === ele.Id));
                 res.status(200).json({ message: "hosted zones:", userHostedZones });
             }
         }

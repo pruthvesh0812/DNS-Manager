@@ -7,7 +7,9 @@ export const listRecordsForDomain = async (hostedZoneId: string, domainName: str
 
    try {
       const data = await route53.listResourceRecordSets(params).promise();
-      const records = data.ResourceRecordSets.filter(record =>  record.Name.endsWith(domainName));
+      console.log(data,"all records")
+      const domain = domainName + '.';
+      const records = data.ResourceRecordSets.filter(record => (record.Name == domain));
       return records;
    } catch (error) {
       console.error("Error listing records for domain:", error);

@@ -17,7 +17,9 @@ const listRecordsForDomain = (hostedZoneId, domainName) => __awaiter(void 0, voi
     };
     try {
         const data = yield awsConfig_1.route53.listResourceRecordSets(params).promise();
-        const records = data.ResourceRecordSets.filter(record => record.Name.endsWith(domainName));
+        console.log(data, "all records");
+        const domain = domainName + '.';
+        const records = data.ResourceRecordSets.filter(record => (record.Name == domain));
         return records;
     }
     catch (error) {
