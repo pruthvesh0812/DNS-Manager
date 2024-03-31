@@ -18,8 +18,8 @@ app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.json())
 
-app.post("/", (req, res) => {
-    console.log(req.body)
+app.get("/", (req, res) => {
+    // console.log(req.body)
     res.json({ message: "hello" })
 })
 
