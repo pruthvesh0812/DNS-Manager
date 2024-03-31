@@ -21,7 +21,7 @@ app.use((0, cookie_parser_1.default)());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
 app.post("/", (req, res) => {
-    console.log(JSON.parse(req.body));
+    // console.log(JSON.parse(req.body));
     res.json({ message: "hello" , body:"asdfa"});
 });
 app.use("/api", dns_1.default);
