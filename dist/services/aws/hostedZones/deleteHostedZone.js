@@ -14,6 +14,7 @@ const awsConfig_1 = require("../awsConfig");
 const RecordsOperationsForHostedZone_1 = require("../records/RecordsOperationsForHostedZone");
 const db_1 = require("../../../db");
 const listRecords_1 = require("../records/listRecords");
+const getStatus_1 = require("../lib/getStatus");
 const deleteHostedZone = (hostedZoneId, domainId) => __awaiter(void 0, void 0, void 0, function* () {
     const params = {
         Id: hostedZoneId,
@@ -45,6 +46,10 @@ const deleteHostedZone = (hostedZoneId, domainId) => __awaiter(void 0, void 0, v
             };
             const responseDelete = yield (0, RecordsOperationsForHostedZone_1.addEditDeleteRecordToHostedZone)(recordsToDelete);
             if (responseDelete) {
+                let status = responseDelete.ChangeInfo.Status;
+                while (status === "PENDING") {
+                    status = (yield (0, getStatus_1.checkChangeStatus)(responseDelete.ChangeInfo.Id));
+                }
                 const data = yield awsConfig_1.route53.deleteHostedZone(params).promise();
                 console.log("Hosted Zone Deleted:", data);
                 return data;

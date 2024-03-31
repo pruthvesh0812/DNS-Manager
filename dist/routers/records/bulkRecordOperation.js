@@ -70,6 +70,9 @@ router.post("/delete", (req, res) => __awaiter(void 0, void 0, void 0, function*
                                 status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);
                             }), 2000);
                         }
+                        // deleting records from db
+                        const recordsToDelete = record.param.ChangeBatch.Changes.map(change => change.ResourceRecordSet.Name);
+                        const result = yield db_1.Records.deleteMany({ recordName: { $in: recordsToDelete } });
                         return res.status(200).json({ message: "record deleted successfully", status });
                     }
                 }

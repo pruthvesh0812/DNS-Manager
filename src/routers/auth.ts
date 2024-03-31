@@ -35,30 +35,40 @@ router.post("/signup", async (req: Request, res: Response) => {
 })
 
 router.post("/login", async (req: Request, res: Response) => {
+    console.log("login1")
     const parsedInputSchema = authInputSchema.safeParse(req.body);
     if (!parsedInputSchema.success) {
         return res.status(400).json({ message: "Bad request, Wrong input", error: parsedInputSchema.error });
     }
     else {
+    console.log("login2")
+
         const { email, password } = parsedInputSchema.data
         const user = await Users.findOne({ email, password });
         if (user) {
+    console.log("login3")
+
             const token = await generateToken({ email, password})
             res.cookie('userToken', `${token}`, { maxAge: 36000000, httpOnly:true}); //httpOnly client side js cant access cookie
             // res.setHeader('Set-Cookie', `userToken=${token}; HttpOnly; Path=/ ; Max-age=36000000`) 
+    console.log("login4")
             
             // attach user to cookie
             res.cookie('user', JSON.stringify(user), {maxAge: 36000000, httpOnly: true, path: '/'})
+            console.log("login5")
 
             const userRole = await UserRoles.findById({_id:user._id}) 
             let role = ''
             if(userRole){
+    console.log("login6")
+
                 res.cookie('userRole',`${userRole.role}`,{maxAge:36000000,httpOnly:true});
                 role = userRole.role as string
             }
             else{
                 res.cookie('userRole','',{maxAge:36000000,httpOnly:true});
             }
+    console.log("login7")
             
             return res.status(200).json({ message: "logged in successfully", token: token , userRole:role})
         }

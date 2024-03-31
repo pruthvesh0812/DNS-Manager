@@ -17,7 +17,7 @@ const createRecordForDb = (record, domainId, routingPolicy) => {
         const records = changes.map((change) => ({
             recordAction: change.Action,
             recordType: change.ResourceRecordSet.Type,
-            recordName: change.ResourceRecordSet.Name  + '.',
+            recordName: change.ResourceRecordSet.Name + '.',
             ttl: change.ResourceRecordSet.TTL,
             recordRoutingPolicy: routingPolicy,
             domainId
