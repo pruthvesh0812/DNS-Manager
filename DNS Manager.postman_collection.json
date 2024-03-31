@@ -1,0 +1,960 @@
+{
+	"info": {
+		"_postman_id": "4cad9184-ea0a-4036-b4b1-d3ae37b2bba5",
+		"name": "DNS Manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "29070320"
+	},
+	"item": [
+		{
+			"name": "hosted Zones",
+			"item": [
+				{
+					"name": "createHostedZone",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Beare eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoidXNlckAxMjM0IiwiZXhwIjoxNzExNzgyODQ4LCJpYXQiOjE3MTE3NzkyNDgsIm5iZiI6MTcxMTc3OTI0OH0.o9W9UC2iS_vJlP5ojfv4H22Z7Z7ty2IJHp7atDDHMCw",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/api/domain/create"
+					},
+					"response": [
+						{
+							"name": "createHostedZone",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"domain\":\"toptrip.in\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5001/api/domain/create"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "95"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"5f-/gb/84IBF8aAcbibU6+otIYpNdA\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Mar 2024 10:18:59 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"hosted zone created succesfully\",\n    \"hostedZoneId\": \"/hostedzone/Z0282893QXDEPYST0539\"\n}"
+						}
+					]
+				},
+				{
+					"name": "detele hostedZone",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoidXNlckAxMjM0IiwiZXhwIjoxNzExNzgyODQ4LCJpYXQiOjE3MTE3NzkyNDgsIm5iZiI6MTcxMTc3OTI0OH0.o9W9UC2iS_vJlP5ojfv4H22Z7Z7ty2IJHp7atDDHMCw",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/api/domain/delete/hostedZoneId"
+					},
+					"response": []
+				},
+				{
+					"name": "get hostedZones",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/api/domain/hostedZones"
+					},
+					"response": [
+						{
+							"name": "get hostedZones",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"url": "http://localhost:5001/api/domain/hostedZones"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "202"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"ca-a8lPTiK+lZFD2Tl1ncjEqY4fgfs\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Mar 2024 10:43:23 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"hosted zones:\",\n    \"userHostedZones\": [\n        {\n            \"Id\": \"/hostedzone/Z0282893QXDEPYST0539\",\n            \"Name\": \"toptrip.in.\",\n            \"CallerReference\": \"1711793937780\",\n            \"Config\": {\n                \"PrivateZone\": false\n            },\n            \"ResourceRecordSetCount\": 2\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"user1@gmail.com\",\r\n    \"password\":\"user@1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5001/api/auth/login"
+					},
+					"response": [
+						{
+							"name": "signup",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoidXNlckAxMjM0IiwiZXhwIjoxNzExNzgyMzcwLCJpYXQiOjE3MTE3Nzg3NzAsIm5iZiI6MTcxMTc3ODc3MH0.u3_60t9_KJD4gVfoBfS1TzSZ9lzlo_xom8maX23NUco",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\":\"user1@gmail.com\",\r\n    \"password\":\"user@1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5001/api/auth/login"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "userToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoidXNlckAxMjM0IiwiZXhwIjoxNzExNzgyODQ4LCJpYXQiOjE3MTE3NzkyNDgsIm5iZiI6MTcxMTc3OTI0OH0.o9W9UC2iS_vJlP5ojfv4H22Z7Z7ty2IJHp7atDDHMCw; Max-Age=36; Path=/; Expires=Sat, 30 Mar 2024 06:14:44 GMT; HttpOnly"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "userRole=; Max-Age=36; Path=/; Expires=Sat, 30 Mar 2024 06:14:44 GMT; HttpOnly"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "277"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"115-A70QpDe/+9HhwXQ4iNOS6b+atOk\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Mar 2024 06:14:08 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"logged in successfully\",\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoidXNlckAxMjM0IiwiZXhwIjoxNzExNzgyODQ4LCJpYXQiOjE3MTE3NzkyNDgsIm5iZiI6MTcxMTc3OTI0OH0.o9W9UC2iS_vJlP5ojfv4H22Z7Z7ty2IJHp7atDDHMCw\",\n    \"userRole\": \"\"\n}"
+						}
+					]
+				},
+				{
+					"name": "set user role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoidXNlckAxMjM0IiwiZXhwIjoxNzExNzgyODQ4LCJpYXQiOjE3MTE3NzkyNDgsIm5iZiI6MTcxMTc3OTI0OH0.o9W9UC2iS_vJlP5ojfv4H22Z7Z7ty2IJHp7atDDHMCw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userRole\":\"Admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5001/api/auth/setUserRole"
+					},
+					"response": [
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userRole\":\"Admin\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5001/api/auth/setUserRole"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "userRole=Admin; Max-Age=36000; Path=/; Expires=Sat, 30 Mar 2024 20:14:06 GMT; HttpOnly"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "40"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"28-v17N8D+cfF5+GwvpT9K/kKH5ENA\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Mar 2024 10:14:06 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"user role set successfully\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "records",
+			"item": [
+				{
+					"name": "bulk record operations",
+					"item": [
+						{
+							"name": "bulk create record",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"url": "http://localhost:5001/api/record/bulk/create"
+							},
+							"response": [
+								{
+									"name": "bulk create record",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{token}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"param\":{\r\n       \"ChangeBatch\": {\r\n            \"Changes\": [\r\n                {\r\n                    \"Action\": \"CREATE\",\r\n                    \"ResourceRecordSet\": {\r\n                        \"Name\": \"trip.toptrip.in\",\r\n                        \"Type\": \"A\",\r\n                        \"TTL\": 60,\r\n                        \"ResourceRecords\": [{\r\n                             \"Value\": \"192.16.168.40\" \r\n                        }]   \r\n                    }\r\n                },\r\n                  {\r\n                    \"Action\": \"CREATE\",\r\n                    \"ResourceRecordSet\": {\r\n                        \"Name\": \"t.toptrip.in\",\r\n                        \"Type\": \"A\",\r\n                        \"TTL\": 60,\r\n                        \"ResourceRecords\": [{\r\n                             \"Value\": \"192.16.200.4\" \r\n                        }]   \r\n                    }\r\n                }\r\n            ],\r\n            \"Comment\":\"testing bulk 1\"\r\n        },\r\n    \"HostedZoneId\":\"/hostedzone/Z0282893QXDEPYST0539\"\r\n    }\r\n    \r\n}\r\n\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "http://localhost:5001/api/record/bulk/create"
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Access-Control-Allow-Credentials",
+											"value": "true"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "59"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"3b-EbonIdBAQ48219zAFrhlStNaCbY\""
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 30 Mar 2024 19:19:22 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"record created successfully\",\n    \"status\": \"INSYNC\"\n}"
+								}
+							]
+						},
+						{
+							"name": "bulk update record",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"url": "http://localhost:5001/api/record/bulk/update"
+							},
+							"response": []
+						},
+						{
+							"name": "bulk delete record",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"url": "http://localhost:5001/api/record/bulk/delete"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "get records for domain",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5001/api/record/?domain=example.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"record",
+								""
+							],
+							"query": [
+								{
+									"key": "domain",
+									"value": "example.com"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "get records for domain",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5001/api/record/?domain=toptrip.in",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"record",
+										""
+									],
+									"query": [
+										{
+											"key": "domain",
+											"value": "toptrip.in"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "418"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1a2-XsTPTMr5hU+P8mZ5pXBwN8tS2d8\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Mar 2024 11:19:09 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"records retrived successfully\",\n    \"records\": [\n        {\n            \"Name\": \"toptrip.in.\",\n            \"Type\": \"NS\",\n            \"TTL\": 172800,\n            \"ResourceRecords\": [\n                {\n                    \"Value\": \"ns-219.awsdns-27.com.\"\n                },\n                {\n                    \"Value\": \"ns-690.awsdns-22.net.\"\n                },\n                {\n                    \"Value\": \"ns-1378.awsdns-44.org.\"\n                },\n                {\n                    \"Value\": \"ns-1732.awsdns-24.co.uk.\"\n                }\n            ]\n        },\n        {\n            \"Name\": \"toptrip.in.\",\n            \"Type\": \"SOA\",\n            \"TTL\": 900,\n            \"ResourceRecords\": [\n                {\n                    \"Value\": \"ns-219.awsdns-27.com. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400\"\n                }\n            ]\n        }\n    ]\n}"
+						},
+						{
+							"name": "get records for domain",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5001/api/record/?domain=toptrip.in",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"record",
+										""
+									],
+									"query": [
+										{
+											"key": "domain",
+											"value": "toptrip.in"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "418"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1a2-XsTPTMr5hU+P8mZ5pXBwN8tS2d8\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Mar 2024 19:05:09 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"records retrived successfully\",\n    \"records\": [\n        {\n            \"Name\": \"toptrip.in.\",\n            \"Type\": \"NS\",\n            \"TTL\": 172800,\n            \"ResourceRecords\": [\n                {\n                    \"Value\": \"ns-219.awsdns-27.com.\"\n                },\n                {\n                    \"Value\": \"ns-690.awsdns-22.net.\"\n                },\n                {\n                    \"Value\": \"ns-1378.awsdns-44.org.\"\n                },\n                {\n                    \"Value\": \"ns-1732.awsdns-24.co.uk.\"\n                }\n            ]\n        },\n        {\n            \"Name\": \"toptrip.in.\",\n            \"Type\": \"SOA\",\n            \"TTL\": 900,\n            \"ResourceRecords\": [\n                {\n                    \"Value\": \"ns-219.awsdns-27.com. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400\"\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "create record",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/api/record/create"
+					},
+					"response": [
+						{
+							"name": "create record",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"param\":{\r\n       \"ChangeBatch\": {\r\n            \"Changes\": [\r\n                {\r\n                    \"Action\": \"CREATE\",\r\n                    \"ResourceRecordSet\": {\r\n                        \"Name\": \"trip.toptrip.in\",\r\n                        \"Type\": \"A\",\r\n                        \"TTL\": 60,\r\n                        \"ResourceRecords\": [{\r\n                             \"Value\": \"192.16.200.4\" \r\n                        }]   \r\n                    }\r\n                }\r\n            ],\r\n            \"Comment\":\"testing\"\r\n        },\r\n    \"HostedZoneId\":\"/hostedzone/Z0282893QXDEPYST0539\"\r\n    }\r\n}\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5001/api/record/create"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "59"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3b-EbonIdBAQ48219zAFrhlStNaCbY\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Mar 2024 18:45:39 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"record created successfully\",\n    \"status\": \"INSYNC\"\n}"
+						}
+					]
+				},
+				{
+					"name": "delete record",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/api/record/delete"
+					},
+					"response": [
+						{
+							"name": "delete record",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"param\":{\r\n       \"ChangeBatch\": {\r\n            \"Changes\": [\r\n                {\r\n                    \"Action\": \"DELETE\",\r\n                    \"ResourceRecordSet\": {\r\n                        \"Name\": \"trip.toptrip.in\",\r\n                        \"Type\": \"A\",\r\n                        \"TTL\": 120,\r\n                        \"ResourceRecords\": [{\r\n                             \"Value\": \"192.16.168.4\" \r\n                        }]   \r\n                    }\r\n                }\r\n            ],\r\n            \"Comment\":\"testing\"\r\n        },\r\n    \"HostedZoneId\":\"/hostedzone/Z0282893QXDEPYST0539\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5001/api/record/delete"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "59"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3b-kPzZSVEnAEb/6SvmEsHPlgmtgOg\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Mar 2024 19:02:28 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"record deleted successfully\",\n    \"status\": \"INSYNC\"\n}"
+						}
+					]
+				},
+				{
+					"name": "update record",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5001/api/record/update"
+					},
+					"response": [
+						{
+							"name": "update record",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"param\":{\r\n       \"ChangeBatch\": {\r\n            \"Changes\": [\r\n                {\r\n                    \"Action\": \"UPSERT\",\r\n                    \"ResourceRecordSet\": {\r\n                        \"Name\": \"trip.toptrip.in\",\r\n                        \"Type\": \"A\",\r\n                        \"TTL\": 120,\r\n                        \"ResourceRecords\": [{\r\n                             \"Value\": \"192.16.168.4\" \r\n                        }]   \r\n                    }\r\n                }\r\n            ],\r\n            \"Comment\":\"testing\"\r\n        },\r\n    \"HostedZoneId\":\"/hostedzone/Z0282893QXDEPYST0539\"\r\n    }\r\n}\r\n\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "http://localhost:5001/api/record/update"
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Credentials",
+									"value": "true"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "59"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"3b-bXvagumGRxfasazzoF/1nMcighM\""
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Mar 2024 18:55:54 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"record updated successfully\",\n    \"status\": \"INSYNC\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoidXNlckAxMjM0IiwiZXhwIjoxNzExNzgyMzcwLCJpYXQiOjE3MTE3Nzg3NzAsIm5iZiI6MTcxMTc3ODc3MH0.u3_60t9_KJD4gVfoBfS1TzSZ9lzlo_xom8maX23NUco"
+		},
+		{
+			"key": "BASE_URL",
+			"value": "localhost"
+		}
+	]
+}
