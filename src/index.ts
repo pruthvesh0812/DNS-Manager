@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.json())
 
 app.get("/", (req, res) => {
-    // console.log(req.body)
+    console.log(" in get route")
     res.json({ message: "hello" })
 })
 
