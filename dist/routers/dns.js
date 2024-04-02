@@ -7,7 +7,7 @@ const domain_1 = __importDefault(require("./domain"));
 const express_1 = __importDefault(require("express"));
 const middlewares_1 = require("../middlewares");
 const auth_1 = __importDefault(require("./auth"));
-const recordOperatoins_1 = __importDefault(require("./records/recordOperatoins"));
+const recordOperatoins_1 = __importDefault(require("./recordOperatoins"));
 const router = express_1.default.Router();
 router.use("/domain", middlewares_1.authenticateLoggedIn, domain_1.default);
 router.use("/auth", auth_1.default);

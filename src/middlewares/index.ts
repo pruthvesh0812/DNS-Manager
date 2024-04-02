@@ -12,7 +12,7 @@ export const authenticateLoggedIn = async (req: Request, res: Response, next: Ne
         const token: string = authHeader.split(' ')[1];
         if (token) {
             //verify user
-            const user = await jwtVerify(token, new TextEncoder().encode(process.env.SECRET))
+            try{const user = await jwtVerify(token, new TextEncoder().encode(process.env.SECRET))
             console.log('user', user)
             const { email, password } = user.payload
 
@@ -28,7 +28,10 @@ export const authenticateLoggedIn = async (req: Request, res: Response, next: Ne
             else {
                 return res.status(404).json({ message: "user does not exists" })
             }
-            next()
+            next()}
+            catch(err){
+                res.status(401).json({message:"session expired"})
+            }
         }
         else {
             return res.status(401).json({ message: "unauthorized" })

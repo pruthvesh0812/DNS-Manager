@@ -1,15 +1,15 @@
-import { createHostedZone } from '../../services/aws/hostedZones/createHostedZone'
+import { createHostedZone } from '../services/aws/hostedZones/createHostedZone'
 import express, { Request, Response } from 'express'
-import { authenticateLoggedIn } from '../../middlewares'
-import { Domains, Records } from '../../db'
+import { authenticateLoggedIn } from '../middlewares'
+import { Domains, Records } from '../db'
 import { Route53 } from 'aws-sdk'
-import { listRecordsForDomain } from '../../services/aws/records/listRecords'
-import { paramsInterface } from '../../services/aws/lib/recordParamsInterface'
-import { addEditDeleteRecordToHostedZone } from '../../services/aws/records/RecordsOperationsForHostedZone'
-import { checkChangeStatus } from '../../services/aws/lib/getStatus'
+import { listRecordsForDomain } from '../services/aws/records/listRecords'
+import { paramsInterface } from '../services/aws/lib/recordParamsInterface'
+import { addEditDeleteRecordToHostedZone } from '../services/aws/records/RecordsOperationsForHostedZone'
+import { checkChangeStatus } from '../services/aws/lib/getStatus'
 import bulkRecordRoutes from './bulkRecordOperation'
-import { createRecordForDb } from '../../services/aws/lib/createRecordForDb'
-import { userType } from '../../req'
+import { createRecordForDb } from '../services/aws/lib/createRecordForDb'
+import { userType } from '../req'
 const router = express.Router()
 
 // declare type for record parameters
@@ -22,7 +22,7 @@ router.use("/bulk", bulkRecordRoutes)
 
 router.get("/", async (req: Request, res: Response) => {
     const domainName = req.query.domain as string;
-    const { email, password, _id } = req.user as userType 
+    const { email, password, _id } = req.user as userType
     // JSON.parse(req.cookies.user) user object is in json but in string format so need to parse that
     console.log(domainName, _id)
 
@@ -48,44 +48,44 @@ router.post("/create", async (req: Request, res: Response) => {
 
     const { record, routingPolicy }: recordAndRoutingPolicy = req.body;
     console.log(record, 'record param and hostedZid')
-    const {_id} = req.user as userType 
+    const { _id } = req.user as userType
     try {
         // to get domainId
-        const domain = await Domains.findOne({userId:_id})
+        const domain = await Domains.findOne({ userId: _id })
         //check domain exists
-        if(domain){
+        if (domain) {
 
             // add record to hostedZone on aws
             const response = await addEditDeleteRecordToHostedZone(record)
 
             //check if response
             if (response) {
-                    console.log(response, 'response from create record')
+                console.log(response, 'response from create record')
 
-                    // save record to db
-                    
-                    const recordSaved = new Records(createRecordForDb(record, domain._id ,routingPolicy))
-                    await recordSaved.save()
-                    
-                    // check status to return res on INSYNC
-                    if (response.ChangeInfo.Status === "PENDING") {
-                        let status = await checkChangeStatus(response.ChangeInfo.Id);
-                        if (status) {
-                            while (status === "PENDING") {
-                                status = await checkChangeStatus(response.ChangeInfo.Id);
-                            }
-                            return res.status(200).json({ message: "record created successfully", status })
+                // save record to db
+
+                const recordSaved = new Records(createRecordForDb(record, domain._id, routingPolicy))
+                await recordSaved.save()
+
+                // check status to return res on INSYNC
+                if (response.ChangeInfo.Status === "PENDING") {
+                    let status = await checkChangeStatus(response.ChangeInfo.Id);
+                    if (status) {
+                        while (status === "PENDING") {
+                            status = await checkChangeStatus(response.ChangeInfo.Id);
                         }
-
-                    }
-                    else {
                         return res.status(200).json({ message: "record created successfully", status })
                     }
+
                 }
-        }else{
+                else {
+                    return res.status(200).json({ message: "record created successfully", status })
+                }
+            }
+        } else {
             return res.status(404).json({ error: "domain does not exists" })
         }
-        
+
     }
     catch (err) {
         return res.status(500).json({ error: "Internal server error" })
@@ -97,7 +97,7 @@ router.delete("/delete", async (req: Request, res: Response) => {
 
     const record: recordType = req.body;
 
-    const { _id } = req.user as userType 
+    const { _id } = req.user as userType
     const hostedZoneId = record.param.HostedZoneId;
     try {
         const domain = await Domains.findOne({ userId: _id, hostedZoneId })
@@ -113,7 +113,7 @@ router.delete("/delete", async (req: Request, res: Response) => {
                         while (status === "PENDING") {
                             status = await checkChangeStatus(response.ChangeInfo.Id);
                         }
-                        const result = await Records.deleteOne({recordName:record.param.ChangeBatch.Changes[0].ResourceRecordSet.Name})
+                        const result = await Records.deleteOne({ recordName: record.param.ChangeBatch.Changes[0].ResourceRecordSet.Name })
                         return res.status(200).json({ message: "record deleted successfully", status })
                     }
 

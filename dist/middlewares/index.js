@@ -19,21 +19,26 @@ const authenticateLoggedIn = (req, res, next) => __awaiter(void 0, void 0, void 
         const token = authHeader.split(' ')[1];
         if (token) {
             //verify user
-            const user = yield (0, jose_1.jwtVerify)(token, new TextEncoder().encode(process.env.SECRET));
-            console.log('user', user);
-            const { email, password } = user.payload;
-            // UPDATE: this code has been moved to /auth/login route
-            //check if user still exists to maintain consistency - 
-            const userFromDB = yield db_1.Users.findOne({ email, password });
-            if (userFromDB) {
-                console.log(userFromDB, "user from db");
-                req.user = { email: userFromDB.email, password: userFromDB.password, _id: userFromDB._id } || undefined;
-                // res.cookie('user', `${userFromDB}`, {maxAge: 36000000, httpOnly: true, path: '/'})
+            try {
+                const user = yield (0, jose_1.jwtVerify)(token, new TextEncoder().encode(process.env.SECRET));
+                console.log('user', user);
+                const { email, password } = user.payload;
+                // UPDATE: this code has been moved to /auth/login route
+                //check if user still exists to maintain consistency - 
+                const userFromDB = yield db_1.Users.findOne({ email, password });
+                if (userFromDB) {
+                    console.log(userFromDB, "user from db");
+                    req.user = { email: userFromDB.email, password: userFromDB.password, _id: userFromDB._id } || undefined;
+                    // res.cookie('user', `${userFromDB}`, {maxAge: 36000000, httpOnly: true, path: '/'})
+                }
+                else {
+                    return res.status(404).json({ message: "user does not exists" });
+                }
+                next();
             }
-            else {
-                return res.status(404).json({ message: "user does not exists" });
+            catch (err) {
+                res.status(401).json({ message: "session expired" });
             }
-            next();
         }
         else {
             return res.status(401).json({ message: "unauthorized" });

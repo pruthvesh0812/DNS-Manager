@@ -2,7 +2,7 @@ import domainRoutes from './domain';
 import express from 'express';
 import { authenticateLoggedIn } from '../middlewares';
 import authRoutes from './auth'
-import recordRoutes from './records/recordOperatoins'
+import recordRoutes from './recordOperatoins'
 
 const router = express.Router();
 
