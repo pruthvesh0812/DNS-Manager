@@ -36,7 +36,7 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
             yield newUser.save();
             const token = yield (0, generateToken_1.generateToken)({ email, password });
             // attach user to cookie
-            res.cookie('user', JSON.stringify(user), { maxAge: 36000000, httpOnly: true, path: '/' });
+            // res.cookie('user', JSON.stringify(user), {maxAge: 36000000, httpOnly: true, path: '/'})
             res.cookie('userToken', `${token}`, { maxAge: 36000000, httpOnly: true });
             // res.setHeader('Set-Cookie', `userToken=${token}; HttpOnly; Path=/ ; Max-age=36000000`)
             return res.status(200).json({ message: "user created successfully", token: token });
@@ -60,7 +60,7 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
             // res.setHeader('Set-Cookie', `userToken=${token}; HttpOnly; Path=/ ; Max-age=36000000`) 
             console.log("login4");
             // attach user to cookie
-            res.cookie('user', JSON.stringify(user), { maxAge: 36000000, httpOnly: true, path: '/' });
+            // res.cookie('user', JSON.stringify(user), {maxAge: 36000000, httpOnly: true, path: '/'})
             console.log("login5");
             const userRole = yield db_1.UserRoles.findById({ _id: user._id });
             let role = '';
@@ -81,8 +81,8 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 }));
 router.post("/setUserRole", middlewares_1.authenticateLoggedIn, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password, _id } = JSON.parse(req.cookies.user);
-    console.log(req.cookies, _id);
+    const { email, password, _id } = req.user;
+    //  console.log(req.cookies, _id)
     const { userRole } = req.body;
     try {
         const newRole = new db_1.UserRoles({ userId: _id, role: userRole });

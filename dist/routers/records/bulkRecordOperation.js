@@ -20,7 +20,7 @@ const createRecordForDb_1 = require("../../services/aws/lib/createRecordForDb");
 const router = express_1.default.Router();
 router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { record, routingPolicy } = req.body;
-    const { _id } = JSON.parse(req.cookies.user);
+    const { _id } = req.user;
     console.log(record, routingPolicy, "RR");
     try {
         const domain = yield db_1.Domains.findOne({ userId: _id });
@@ -53,7 +53,7 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
 }));
 router.post("/delete", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const record = req.body;
-    const { _id } = JSON.parse(req.cookies.user);
+    const { _id } = req.user;
     const hostedZoneId = record.param.HostedZoneId;
     try {
         const domain = yield db_1.Domains.findOne({ userId: _id, hostedZoneId });

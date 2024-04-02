@@ -23,7 +23,8 @@ const router = express_1.default.Router();
 router.use("/bulk", bulkRecordOperation_1.default);
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const domainName = req.query.domain;
-    const { email, password, _id } = JSON.parse(req.cookies.user); // user object is in json but in string format so need to parse that
+    const { email, password, _id } = req.user;
+    // JSON.parse(req.cookies.user) user object is in json but in string format so need to parse that
     console.log(domainName, _id);
     try {
         const domain = yield db_1.Domains.findOne({ domainName, userId: _id });
@@ -45,7 +46,7 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { record, routingPolicy } = req.body;
     console.log(record, 'record param and hostedZid');
-    const { _id } = JSON.parse(req.cookies.user);
+    const { _id } = req.user;
     try {
         // to get domainId
         const domain = yield db_1.Domains.findOne({ userId: _id });
@@ -84,7 +85,7 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
 }));
 router.delete("/delete", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const record = req.body;
-    const { _id } = JSON.parse(req.cookies.user);
+    const { _id } = req.user;
     const hostedZoneId = record.param.HostedZoneId;
     try {
         const domain = yield db_1.Domains.findOne({ userId: _id, hostedZoneId });

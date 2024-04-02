@@ -21,10 +21,9 @@ const getStatus_1 = require("../services/aws/lib/getStatus");
 const router = express_1.default.Router();
 router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { domain } = req.body;
-    console.log(req.cookies.user)
-
-    const { email, password, _id } = JSON.parse(req.cookies.user);
-    const userRole = req.cookies.userRole;
+    // console.log(req.cookies.user)
+    const { email, password, _id, userRole } = req.user;
+    // const userRole = req.cookies.userRole;
     //check domain exists
     try {
         const res1 = yield fetch(`https://${domain}`, { method: 'HEAD' });
@@ -58,7 +57,7 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 }));
 router.delete("/delete", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password, _id } = JSON.parse(req.cookies.user);
+    const { email, password, _id } = req.user;
     const hostedZoneId = req.query.hostedZoneId;
     try {
         //check if userId maps to hostedZoneId
@@ -83,7 +82,7 @@ router.delete("/delete", (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 }));
 router.get("/hostedZones", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, password, _id } = JSON.parse(req.cookies.user);
+    const { email, password, _id } = req.user;
     console.log(_id, "id of domain");
     try {
         const domains = yield db_1.Domains.find({ userId: _id });

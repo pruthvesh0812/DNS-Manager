@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.authenticateLoggedIn = void 0;
 const jose_1 = require("jose");
+const db_1 = require("../db");
 const authenticateLoggedIn = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     // const token = req.cookies['userToken']
     const authHeader = req.headers.authorization;
@@ -23,14 +24,15 @@ const authenticateLoggedIn = (req, res, next) => __awaiter(void 0, void 0, void 
             const { email, password } = user.payload;
             // UPDATE: this code has been moved to /auth/login route
             //check if user still exists to maintain consistency - 
-            // const userFromDB = await Users.findOne({ email, password });
-            // if (userFromDB) {
-            //     console.log(userFromDB, "user from db")
-            //     res.cookie('user', `${userFromDB}`, {maxAge: 36000000, httpOnly: true, path: '/'})
-            // }
-            // else {
-            //     return res.status(404).json({ message: "user does not exists" })
-            // }
+            const userFromDB = yield db_1.Users.findOne({ email, password });
+            if (userFromDB) {
+                console.log(userFromDB, "user from db");
+                req.user = { email: userFromDB.email, password: userFromDB.password, _id: userFromDB._id } || undefined;
+                // res.cookie('user', `${userFromDB}`, {maxAge: 36000000, httpOnly: true, path: '/'})
+            }
+            else {
+                return res.status(404).json({ message: "user does not exists" });
+            }
             next();
         }
         else {
