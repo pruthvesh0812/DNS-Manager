@@ -51,17 +51,21 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
     const { _id } = req.user;
     try {
         // to get domainId
+        console.log("1");
         const domain = yield db_1.Domains.findOne({ userId: _id });
         //check domain exists
+        console.log("2");
         if (domain) {
             // add record to hostedZone on aws
             const response = yield (0, RecordsOperationsForHostedZone_1.addEditDeleteRecordToHostedZone)(record);
+            console.log("3");
             //check if response
             if (response) {
                 console.log(response, 'response from create record');
                 // save record to db
                 const recordSaved = new db_1.Records((0, createRecordForDb_1.createRecordForDb)(record, domain._id, routingPolicy));
                 yield recordSaved.save();
+                console.log("4");
                 // check status to return res on INSYNC
                 if (response.ChangeInfo.Status === "PENDING") {
                     let status = yield (0, getStatus_1.checkChangeStatus)(response.ChangeInfo.Id);

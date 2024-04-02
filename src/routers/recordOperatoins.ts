@@ -53,21 +53,26 @@ router.post("/create", async (req: Request, res: Response) => {
     const { _id } = req.user as userType
     try {
         // to get domainId
+        console.log("1")
         const domain = await Domains.findOne({ userId: _id })
         //check domain exists
+        console.log("2")
+
         if (domain) {
 
             // add record to hostedZone on aws
             const response = await addEditDeleteRecordToHostedZone(record)
+            console.log("3")
 
             //check if response
             if (response) {
                 console.log(response, 'response from create record')
-
+                
                 // save record to db
-
+                
                 const recordSaved = new Records(createRecordForDb(record, domain._id, routingPolicy))
                 await recordSaved.save()
+                console.log("4")
 
                 // check status to return res on INSYNC
                 if (response.ChangeInfo.Status === "PENDING") {
