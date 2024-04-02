@@ -11,6 +11,7 @@ const router = express.Router()
 
 router.post("/create", async (req: Request, res: Response) => {
     const { domain } = req.body;
+    console.log(req.cookies.user)
     const { email, password, _id } = JSON.parse(req.cookies.user);
     const userRole = req.cookies.userRole;
 

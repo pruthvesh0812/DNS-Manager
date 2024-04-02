@@ -21,6 +21,8 @@ const getStatus_1 = require("../services/aws/lib/getStatus");
 const router = express_1.default.Router();
 router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { domain } = req.body;
+    console.log(req.cookies.user)
+
     const { email, password, _id } = JSON.parse(req.cookies.user);
     const userRole = req.cookies.userRole;
     //check domain exists
