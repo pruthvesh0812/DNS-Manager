@@ -44,8 +44,10 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { record, routingPolicy } = req.body;
-    console.log(record, 'record param and hostedZid');
+    const { newRecord, hostedZoneId } = req.body;
+    console.log(newRecord, hostedZoneId, 'record param and hostedZid');
+    const { record, routingPolicy } = newRecord;
+    record.param.HostedZoneId = hostedZoneId;
     const { _id } = req.user;
     try {
         // to get domainId

@@ -46,8 +46,10 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.post("/create", async (req: Request, res: Response) => {
 
-    const { record, routingPolicy }: recordAndRoutingPolicy = req.body;
-    console.log(record, 'record param and hostedZid')
+    const {newRecord,hostedZoneId }: {newRecord:recordAndRoutingPolicy,hostedZoneId:string} = req.body;
+    console.log(newRecord,hostedZoneId, 'record param and hostedZid')
+    const {record,routingPolicy} = newRecord
+    record.param.HostedZoneId = hostedZoneId
     const { _id } = req.user as userType
     try {
         // to get domainId
