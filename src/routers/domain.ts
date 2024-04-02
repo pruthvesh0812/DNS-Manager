@@ -7,13 +7,14 @@ import { listHostedZones } from '../services/aws/hostedZones/listHostedZones'
 import { ListHostedZonesType } from '../services/aws/lib/typesForHostedZone'
 import { Route53 } from 'aws-sdk'
 import { checkChangeStatus } from '../services/aws/lib/getStatus'
+import { userType } from '../req'
 const router = express.Router()
 
 router.post("/create", async (req: Request, res: Response) => {
     const { domain } = req.body;
-    console.log(req.cookies.user)
-    const { email, password, _id } = JSON.parse(req.cookies.user);
-    const userRole = req.cookies.userRole;
+    // console.log(req.cookies.user)
+    const { email, password, _id, userRole } = req.user as userType
+    // const userRole = req.cookies.userRole;
 
     //check domain exists
     try {
@@ -54,7 +55,7 @@ router.post("/create", async (req: Request, res: Response) => {
 })
 
 router.delete("/delete", async (req: Request, res: Response) => {
-    const { email, password, _id } = JSON.parse(req.cookies.user)
+    const { email, password, _id } = req.user as userType
     const hostedZoneId = req.query.hostedZoneId as string;
     
     try {
@@ -81,7 +82,7 @@ router.delete("/delete", async (req: Request, res: Response) => {
 })
 
 router.get("/hostedZones", async (req: Request, res: Response) => {
-    const { email, password, _id } = JSON.parse(req.cookies.user)
+    const { email, password, _id } = req.user as userType
     console.log(_id,"id of domain")
     try {
         

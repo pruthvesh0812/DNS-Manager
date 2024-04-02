@@ -7,6 +7,7 @@ import { paramsInterface } from '../../services/aws/lib/recordParamsInterface'
 import { checkChangeStatus } from '../../services/aws/lib/getStatus'
 import { bulkAddEditDeleteRecordToHostedZone } from '../../services/aws/records/BulkRecordsOperationForHostedZone'
 import { createRecordForDb } from '../../services/aws/lib/createRecordForDb'
+import { userType } from '../../req'
 
 const router = express.Router()
 
@@ -17,7 +18,7 @@ type recordAndRoutingPolicy = { record: recordType, routingPolicy: string }
 router.post("/create", async (req: Request, res: Response) => {
 
     const { record, routingPolicy }: recordAndRoutingPolicy = req.body;
-    const { _id } = JSON.parse(req.cookies.user);
+    const { _id } = req.user as userType
     console.log(record, routingPolicy, "RR")
     try {
         const domain = await Domains.findOne({ userId: _id })
@@ -57,7 +58,7 @@ router.post("/delete", async (req: Request, res: Response) => {
 
     const record: recordType = req.body;
 
-    const { _id } = JSON.parse(req.cookies.user)
+    const { _id } = req.user as userType 
     const hostedZoneId = record.param.HostedZoneId;
     try {
         const domain = await Domains.findOne({ userId: _id, hostedZoneId })

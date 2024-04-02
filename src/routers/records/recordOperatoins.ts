@@ -9,6 +9,7 @@ import { addEditDeleteRecordToHostedZone } from '../../services/aws/records/Reco
 import { checkChangeStatus } from '../../services/aws/lib/getStatus'
 import bulkRecordRoutes from './bulkRecordOperation'
 import { createRecordForDb } from '../../services/aws/lib/createRecordForDb'
+import { userType } from '../../req'
 const router = express.Router()
 
 // declare type for record parameters
@@ -21,7 +22,8 @@ router.use("/bulk", bulkRecordRoutes)
 
 router.get("/", async (req: Request, res: Response) => {
     const domainName = req.query.domain as string;
-    const { email, password, _id } = JSON.parse(req.cookies.user); // user object is in json but in string format so need to parse that
+    const { email, password, _id } = req.user as userType 
+    // JSON.parse(req.cookies.user) user object is in json but in string format so need to parse that
     console.log(domainName, _id)
 
     try {
@@ -46,7 +48,7 @@ router.post("/create", async (req: Request, res: Response) => {
 
     const { record, routingPolicy }: recordAndRoutingPolicy = req.body;
     console.log(record, 'record param and hostedZid')
-    const {_id} = JSON.parse(req.cookies.user);
+    const {_id} = req.user as userType 
     try {
         // to get domainId
         const domain = await Domains.findOne({userId:_id})
@@ -95,7 +97,7 @@ router.delete("/delete", async (req: Request, res: Response) => {
 
     const record: recordType = req.body;
 
-    const { _id } = JSON.parse(req.cookies.user)
+    const { _id } = req.user as userType 
     const hostedZoneId = record.param.HostedZoneId;
     try {
         const domain = await Domains.findOne({ userId: _id, hostedZoneId })

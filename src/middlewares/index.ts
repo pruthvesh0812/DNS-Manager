@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { jwtVerify, type JWTPayload } from 'jose';
 import { Users } from '../db'
+import { userType } from '../req';
+
+
 
 export const authenticateLoggedIn = async (req: Request, res: Response, next: NextFunction) => {
     // const token = req.cookies['userToken']
@@ -16,14 +19,15 @@ export const authenticateLoggedIn = async (req: Request, res: Response, next: Ne
             // UPDATE: this code has been moved to /auth/login route
 
             //check if user still exists to maintain consistency - 
-            // const userFromDB = await Users.findOne({ email, password });
-            // if (userFromDB) {
-            //     console.log(userFromDB, "user from db")
-            //     res.cookie('user', `${userFromDB}`, {maxAge: 36000000, httpOnly: true, path: '/'})
-            // }
-            // else {
-            //     return res.status(404).json({ message: "user does not exists" })
-            // }
+            const userFromDB = await Users.findOne({ email, password });
+            if (userFromDB) {
+                console.log(userFromDB, "user from db")
+                    req.user = {email:userFromDB.email as string, password:userFromDB.password as string,_id:userFromDB._id} || undefined
+                // res.cookie('user', `${userFromDB}`, {maxAge: 36000000, httpOnly: true, path: '/'})
+            }
+            else {
+                return res.status(404).json({ message: "user does not exists" })
+            }
             next()
         }
         else {

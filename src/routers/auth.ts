@@ -3,6 +3,7 @@ import { authInputSchema } from '../utils/inputVal'
 import { UserRoles, Users } from '../db'
 import { generateToken } from '../utils/generateToken'
 import { authenticateLoggedIn } from '../middlewares'
+import { userType } from '../req'
 
 const router = express.Router()
 
@@ -25,7 +26,7 @@ router.post("/signup", async (req: Request, res: Response) => {
            
             const token = await generateToken({ email, password })
             // attach user to cookie
-            res.cookie('user', JSON.stringify(user), {maxAge: 36000000, httpOnly: true, path: '/'})
+            // res.cookie('user', JSON.stringify(user), {maxAge: 36000000, httpOnly: true, path: '/'})
 
             res.cookie('userToken', `${token}`, { maxAge: 36000000, httpOnly:true});
             // res.setHeader('Set-Cookie', `userToken=${token}; HttpOnly; Path=/ ; Max-age=36000000`)
@@ -54,7 +55,7 @@ router.post("/login", async (req: Request, res: Response) => {
     console.log("login4")
             
             // attach user to cookie
-            res.cookie('user', JSON.stringify(user), {maxAge: 36000000, httpOnly: true, path: '/'})
+            // res.cookie('user', JSON.stringify(user), {maxAge: 36000000, httpOnly: true, path: '/'})
             console.log("login5")
 
             const userRole = await UserRoles.findById({_id:user._id}) 
@@ -79,8 +80,9 @@ router.post("/login", async (req: Request, res: Response) => {
 })
 
 router.post("/setUserRole",authenticateLoggedIn, async (req: Request, res: Response) => {
-     const { email, password, _id } = JSON.parse(req.cookies.user);
-     console.log(req.cookies, _id)
+    
+     const { email, password, _id } = req.user as userType
+    //  console.log(req.cookies, _id)
      const { userRole } = req.body;
    
     try{  
