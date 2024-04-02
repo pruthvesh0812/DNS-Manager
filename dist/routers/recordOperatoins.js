@@ -48,6 +48,7 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
     console.log(newRecord, hostedZoneId, 'record param and hostedZid');
     const { record, routingPolicy } = newRecord;
     record.param.HostedZoneId = hostedZoneId;
+    record.param.ChangeBatch.Changes[0].Action = "CREATE";
     const { _id } = req.user;
     try {
         // to get domainId
