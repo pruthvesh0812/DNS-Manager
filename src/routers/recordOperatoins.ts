@@ -46,9 +46,9 @@ router.get("/", async (req: Request, res: Response) => {
 
 router.post("/create", async (req: Request, res: Response) => {
 
-    const {newRecord,hostedZoneId }: {newRecord:recordAndRoutingPolicy,hostedZoneId:string} = req.body;
-    console.log(newRecord,hostedZoneId, 'record param and hostedZid')
-    const {record,routingPolicy} = newRecord
+    const { newRecordCopy, hostedZoneId }: { newRecordCopy: recordAndRoutingPolicy, hostedZoneId: string } = req.body;
+    console.log(newRecordCopy, hostedZoneId, 'record param and hostedZid')
+    const { record, routingPolicy } = newRecordCopy
     record.param.HostedZoneId = hostedZoneId
     record.param.ChangeBatch.Changes[0].Action = "CREATE"
     const { _id } = req.user as userType
@@ -68,9 +68,9 @@ router.post("/create", async (req: Request, res: Response) => {
             //check if response
             if (response) {
                 console.log(response, 'response from create record')
-                
+
                 // save record to db
-                
+
                 const recordSaved = new Records(createRecordForDb(record, domain._id, routingPolicy))
                 await recordSaved.save()
                 console.log("4")
