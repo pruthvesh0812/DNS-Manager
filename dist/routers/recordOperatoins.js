@@ -44,9 +44,9 @@ router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 }));
 router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { newRecord, hostedZoneId } = req.body;
-    console.log(newRecord, hostedZoneId, 'record param and hostedZid');
-    const { record, routingPolicy } = newRecord;
+    const { newRecordCopy, hostedZoneId } = req.body;
+    console.log(newRecordCopy, hostedZoneId, 'record param and hostedZid');
+    const { record, routingPolicy } = newRecordCopy;
     record.param.HostedZoneId = hostedZoneId;
     record.param.ChangeBatch.Changes[0].Action = "CREATE";
     const { _id } = req.user;
