@@ -122,7 +122,8 @@ router.delete("/delete", (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
 }));
 router.put("/update", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const record = req.body;
+    const updatedRecord = req.body;
+    const { record, routingPolicy } = updatedRecord;
     try {
         const response = yield (0, RecordsOperationsForHostedZone_1.addEditDeleteRecordToHostedZone)(record);
         if (response) {

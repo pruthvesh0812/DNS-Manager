@@ -140,7 +140,8 @@ router.delete("/delete", async (req: Request, res: Response) => {
 
 router.put("/update", async (req: Request, res: Response) => {
 
-    const record: recordType = req.body;
+    const updatedRecord:recordAndRoutingPolicy = req.body;
+    const {record,routingPolicy} = updatedRecord
 
     try {
         const response = await addEditDeleteRecordToHostedZone(record)
