@@ -90,8 +90,8 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.status(500).json({ error: "Internal server error" });
     }
 }));
-router.delete("/delete", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const record = req.body;
+router.post("/delete", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { record } = req.body;
     const { _id } = req.user;
     const hostedZoneId = record.param.HostedZoneId;
     try {

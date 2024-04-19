@@ -101,9 +101,10 @@ router.post("/create", async (req: Request, res: Response) => {
 
 })
 
-router.delete("/delete", async (req: Request, res: Response) => {
+router.post("/delete", async (req: Request, res: Response) => {
 
-    const record: recordType = req.body;
+    const {record}:{record:recordType} = req.body;
+    
 
     const { _id } = req.user as userType
     const hostedZoneId = record.param.HostedZoneId;
