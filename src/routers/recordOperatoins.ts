@@ -103,7 +103,7 @@ router.post("/create", async (req: Request, res: Response) => {
 
 router.post("/delete", async (req: Request, res: Response) => {
 
-    const {record}:{record:recordType} = req.body;
+    const {record,routingPolicy}:{record:recordType,routingPolicy:string} = req.body;
     
 
     const { _id } = req.user as userType

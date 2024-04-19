@@ -91,7 +91,7 @@ router.post("/create", (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 }));
 router.post("/delete", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { record } = req.body;
+    const { record, routingPolicy } = req.body;
     const { _id } = req.user;
     const hostedZoneId = record.param.HostedZoneId;
     try {
